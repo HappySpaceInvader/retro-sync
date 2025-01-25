@@ -2,10 +2,9 @@ import toml
 import subprocess
 import logging
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
@@ -47,31 +46,63 @@ def execute_rsync_upload(local, remote):
 
 class SyncApp(App):
     def build(self):
-        self.output = TextInput(size_hint_y=None, height=400, readonly=True) # Text output
-        layout = BoxLayout(orientation='vertical')
+        layout = RelativeLayout(size=(400, 400))
         
         download_button = Button(
-            text="Download Saves", # Button text 
-            size_hint_y=None, # Height is fixed
-            height=50, # Height is 50 pixels
-            size_hint_x=None, 
-            width=400
-            )
+            text = "Download Saves",
+            size_hint = (None, None),
+            size = (300, 50),
+            pos_hint = {
+                'center_x': .2, 
+                'center_y': .8
+            }
+        )
+        
+        upload_button = Button(
+            text = "Upload Saves",
+            size_hint = (None, None),
+            size = (300, 50),
+            pos_hint = {
+                'center_x': .5, 
+                'center_y': .8
+            }
+        )
+
+        exit_button = Button(
+            text = "Exit",
+            size_hint = (None, None),
+            size = (100, 50),
+            pos_hint = {
+                'center_x': .8, 
+                'center_y': .8
+            }
+        )
+
+
         download_button.bind(on_press=self.on_download_button_press)
-        layout.add_widget(download_button)
-        
-        upload_button = Button(text="Upload Saves", size_hint_y=None, height=50)
         upload_button.bind(on_press=self.on_upload_button_press)
-        layout.add_widget(upload_button)
+        exit_button.bind(on_press=self.on_exit_button_press)
         
-        sync_button = Button(text="Sync All", size_hint_y=None, height=50)
-        sync_button.bind(on_press=self.on_sync_button_press)
-        layout.add_widget(sync_button)
-        
-        scroll_view = ScrollView(size_hint=(1, None), size=(400, 400))
+
+        self.output = TextInput(size_hint_y=None, height=400, readonly=True) # Text output
+        scroll_view  =ScrollView(
+            size_hint=(.8, None), 
+            size=(800, 400),
+            do_scroll_x=False, 
+            do_scroll_y=True,
+            pos_hint = {
+                'center_x': .5, 
+                'center_y': .3
+            }
+        )
+
+
         scroll_view.add_widget(self.output)
-        layout.add_widget(scroll_view)
         
+        layout.add_widget(download_button)
+        layout.add_widget(upload_button)       
+        layout.add_widget(exit_button)       
+        layout.add_widget(scroll_view)
         return layout
 
     def on_download_button_press(self, instance):
@@ -82,9 +113,9 @@ class SyncApp(App):
         logging.debug("Upload button pressed")
         threading.Thread(target=self.run_upload_saves).start()
 
-    def on_sync_button_press(self, instance):
-        logging.debug("Sync button pressed")
-        threading.Thread(target=self.run_sync_saves).start()
+    def on_exit_button_press(self, instance):
+        logging.debug("Exit button pressed")
+        exit()
 
     def run_download_saves(self):
         self.update_output("Starting download...\n")
@@ -131,7 +162,8 @@ class SyncApp(App):
         logging.debug("Sync completed")
 
     def update_output(self, text):
-        Clock.schedule_once(lambda dt: self.output.insert_text(text))
+        logging.debug(f"Updating output with: {text}")
+
 
 if __name__ == "__main__":
     SyncApp().run()
