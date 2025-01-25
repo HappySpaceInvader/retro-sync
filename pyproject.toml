@@ -1,0 +1,15 @@
+[project]
+name = "retro-sync-saves"
+version = "0.1.0"
+description = "A tool to sync save files between local and remote locations."
+authors = [
+    { name = "Richard Cross", email = "richard.cross@icloud.com" }
+]
+
+dependencies = [
+    "toml==^0.10.2",
+    "kivy==^2.0.0"
+]
+
+[tool.setuptools]
+py-modules = []
