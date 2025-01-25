@@ -7,8 +7,9 @@ authors = [
 ]
 
 dependencies = [
-    "toml==^0.10.2",
-    "kivy==^2.0.0"
+    "pytest==8.3.4",
+    "toml==0.10.2",
+    "Kivy==2.3.1"
 ]
 
 [tool.setuptools]

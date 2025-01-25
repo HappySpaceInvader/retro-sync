@@ -1,4 +1,4 @@
 [paths]
 # local = "/run/media/SDCard/emulation/saves"
-remote = "smb://retro:one-orange-cat@DS920/emudeck/test_saves"
-local = "/Users/rick/src/retro-sync-saves/test_saves"
+remote = "/Volumes/emudeck/test_saves"
+local = "/Users/rick/src/retro-sync/test_saves"
